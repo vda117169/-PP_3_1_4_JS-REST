@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Controller
@@ -23,10 +28,13 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 public class AdminController {
 
     private  final UserService userService;
+    private  final RoleService roleService;
+
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/admin")
@@ -48,7 +56,8 @@ public class AdminController {
     }
 
     @GetMapping("/add")
-    public String getUser() { //заполнение
+    public String getUser(Model model) { //заполнение
+        model.addAttribute("listRole", roleService.listRoles());
         return "add";
     }
 
@@ -71,6 +80,14 @@ public class AdminController {
         User user = userService.getUserById(id);
         userService.deleteUser(id);
         return "redirect:/admin";
+    }
+
+    private Set<Role> getAddRole (String[] role) {
+        Set<Role> roleSet=new HashSet<>();
+        for (int i=0; i<role.length; i++) {
+            roleSet.add(roleService.getRoleByName(role[i]));
+        }
+        return roleSet;
     }
 
 }

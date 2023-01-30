@@ -15,8 +15,6 @@
         <th>email</th>
         <th>password</th>
         <th>roles</th>
-        <th>Edit</th>
-        <th>Delete</th>
     </tr>
 
     <tr th:each="user: ${index}">
@@ -29,13 +27,12 @@
         <td th:text="${user.getPassword()}">password</td>
         <td th:text="${user.getRoles()}">roles</td>
 
-        <td> <a  th:href="@{/User/edit/{id} (id=${user.id})}">Edit</a> </td>
-        <td> <a  th:href="@{/User/delete/{id} (id=${user.id})}">Delete</a> </td>
 
     </tr>
 </table>
 <br/>
 <a th:href="@{/User/add}">Add</a>
-</div>
+<a  th:href="@{/User/edit/{id} (id=*{id})}" >Edit</a>
+<a  th:href="@{/User/delete/{id} (id=*{id})}">Delete</a>
 </body>
 </html>
