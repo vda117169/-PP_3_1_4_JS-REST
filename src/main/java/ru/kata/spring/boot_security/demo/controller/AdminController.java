@@ -38,56 +38,47 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String showAllUsers(Model model, @AuthenticationPrincipal User currentUser) {
-        User newUser = new User();
-        model.addAttribute("allUs", userService.showAllUsers());
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("rolesList", userService.getAllRoles());
-        model.addAttribute("newUser", newUser);
-        return "admin";
+    public String showAllUsers(Model model) {
+        model.addAttribute("home_page_admin", userService.showAllUsers());
+        return "home_page_admin";
     }
 
     @GetMapping("/user")
     public String showInfoForUser(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        model.addAttribute("currentUser", user);
-        return "info_for_user";
+        model.addAttribute("home_page", userService.showAllUsers());
+        return "home_page";
     }
 
     @GetMapping("/add")
-    public String getUser(Model model) { //заполнение
-        model.addAttribute("listRole", roleService.listRoles());
+    public String getUser() { //заполнение
         return "add";
     }
 
     @PostMapping("/add")
     public String userAdditions(@ModelAttribute() User user,
-                                @RequestParam() String[] role) {
+                                @RequestParam(value = "newRole") String[] role) {
         userService.createUser(user, role);
         return "redirect:/admin";
     }
 
-    @PostMapping("/edit")
+    @GetMapping("/edit/{id}")
+    public String getUserById(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("edit", userService.getUserById(id));
+        return "edit";
+    }
+
+    @PostMapping("/edit/{id}")
     public String updateListAllUsers(@ModelAttribute() User user,
                                      @RequestParam() String[] role) {
         userService.updateUser(user, role);
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         User user = userService.getUserById(id);
         userService.deleteUser(id);
         return "redirect:/admin";
-    }
-
-    private Set<Role> getAddRole (String[] role) {
-        Set<Role> roleSet=new HashSet<>();
-        for (int i=0; i<role.length; i++) {
-            roleSet.add(roleService.getRoleByName(role[i]));
-        }
-        return roleSet;
     }
 
 }
