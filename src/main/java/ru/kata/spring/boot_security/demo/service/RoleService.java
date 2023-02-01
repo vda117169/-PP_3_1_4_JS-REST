@@ -8,4 +8,5 @@ public interface RoleService {
     public Role getRoleByName(String name);
     public List<Role> listRoles();
 
+    void add(Role roleAdmin);
 }
