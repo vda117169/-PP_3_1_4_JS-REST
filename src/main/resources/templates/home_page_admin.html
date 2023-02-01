@@ -17,11 +17,11 @@
         <th>roles</th>
     </tr>
 
-    <tr th:each="user: ${index}">
+    <tr th:each="user: ${home_page_admin}">
 
         <td th:text="${user.getId()}">id</td>
-        <td th:text="${user.getName(}">name</td>
-        <td th:text="${user.getLastname()}">lastname</td>
+        <td th:text="${user.getName()}">name</td>
+        <td th:text="${user.getLastName()}">lastName</td>
         <td th:text="${user.getAge()}">age</td>
         <td th:text="${user.getEmail()}">email</td>
         <td th:text="${user.getPassword()}">password</td>
@@ -31,8 +31,8 @@
     </tr>
 </table>
 <br/>
-<a th:href="@{/User/add}">Add</a>
-<a  th:href="@{/User/edit/{id} (id=*{id})}" >Edit</a>
-<a  th:href="@{/User/delete/{id} (id=*{id})}">Delete</a>
+<a th:href="@{/add}">Add</a>
+<a  th:href="@{/edit/{id} (id=*{id})}" >Edit</a>
+<a  th:href="@{/delete/{id} (id=*{id})}">Delete</a>
 </body>
 </html>
