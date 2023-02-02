@@ -7,7 +7,9 @@ import ru.kata.spring.boot_security.demo.model.User;
 import javax.annotation.PostConstruct;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class DBInit {
@@ -23,12 +25,14 @@ public class DBInit {
 
     @PostConstruct
     public void init() {
-       Role roleAdmin = new Role (1L, "ROLE_ADMIN");
-       Role roleUser = new Role (2L, "ROLE_USER");
+        Set <User> users = new HashSet<>();
+
+       Role roleAdmin = new Role (1L, "ROLE_ADMIN", users);
+       Role roleUser = new Role (2L, "ROLE_USER", users);
        roleService.add(roleAdmin);
         roleService.add(roleUser);
 
-        List<Role> setAdmin = new ArrayList<>();
+        Set<Role> setAdmin = new HashSet<>();
         String[] listRoles = new String[] {"ROLE_USER", "ROLE_ADMIN"};
 
         setAdmin.add(roleAdmin);
@@ -40,6 +44,7 @@ public class DBInit {
         admin.setEmail("123@mail.ru");
         admin.setPassword("123");
         admin.setLastName("Voitenko");
+        users.add(admin);
 
         userService.createUser(admin, listRoles);
     }
