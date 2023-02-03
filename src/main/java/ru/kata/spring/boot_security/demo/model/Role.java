@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,9 +30,8 @@ public class Role implements GrantedAuthority {
 
     private String roleName;
 
-    @Transient
     @ManyToMany(mappedBy = "roles")
-    private Set<User> user;
+    private List<User> user;
 
 
     @Override

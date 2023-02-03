@@ -25,7 +25,7 @@ public class DBInit {
 
     @PostConstruct
     public void init() {
-        Set <User> users = new HashSet<>();
+        List <User> users = new ArrayList<>();
 
        Role roleAdmin = new Role (1L, "ROLE_ADMIN", users);
        Role roleUser = new Role (2L, "ROLE_USER", users);

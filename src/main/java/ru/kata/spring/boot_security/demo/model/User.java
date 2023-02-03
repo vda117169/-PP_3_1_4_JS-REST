@@ -21,8 +21,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,15 +51,14 @@ public class User implements UserDetails {
 
     private String password;
 
-    @ManyToMany(
-            fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
 
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public String getRolesInfo() {
         return roles.stream().map(Role::getRoleName).map(r -> r.substring(5)).collect(Collectors.joining(","));

@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     private final RoleRepository roleRepository;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
