@@ -23,7 +23,7 @@ public class DBInit {
         this.roleService = roleService;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         List <User> users = new ArrayList<>();
 

@@ -26,13 +26,12 @@
         <td th:text="${user.getEmail()}">email</td>
         <td th:text="${user.getPassword()}">password</td>
         <td th:text="${user.getRoles()}">roles</td>
-
-
+        <td><a th:href="@{/edit/{id} (id=${user.id})}">Edit</a></td>
+        <td><a th:href="@{/delete/{id} (id=${user.id})}">Delete</a></td>
     </tr>
 </table>
 <br/>
 <a th:href="@{/add}">Add</a>
-<a  th:href="@{/edit/{id} (id=*{id})}" >Edit</a>
-<a  th:href="@{/delete/{id} (id=*{id})}">Delete</a>
+
 </body>
 </html>
