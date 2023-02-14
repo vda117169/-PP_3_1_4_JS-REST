@@ -59,18 +59,18 @@ public class AdminController {
 
     @GetMapping("/edit/{id}")
     public String getUserById(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("edit", userService.getUserById(id));
+        model.addAttribute("user", userService.getUserById(id));
         return "edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @PatchMapping("{id}")
     public String updateListAllUsers(@ModelAttribute("edit") User user,
                                      @RequestParam(value = "newRole") String[] role) {
         userService.updateUser(user, role);
         return "redirect:/admin";
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping ("/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";

@@ -7,8 +7,8 @@
 <body>
 <h3>Edit</h3>
 <br/>
-<form th:action="@{/edit/{id} (id=*{id})}" th:object="${edit}" method="post">
-    <table>
+<form th:method="PATCH" th:action="@{/{id}(id=${user.getId()})}" th:object="${user}">
+        <table>
         <tr>
             <td>id</td>
             <td><input type="text" name="id" th:field="*{id}"/></td>
@@ -21,7 +21,7 @@
             <td>email</td>
             <td><input type="text" name="email" th:field="*{email}"/></td>
             <td>password</td>
-            <td><input type="text" name="password" th:field="*{password}"/></td>
+            <td><input type="text" name="name" th:field="*{password}"/></td>
 <!--            <td>roles</td>-->
 <!--            <td><input th:field="*{roles}"/></td>-->
         </tr>

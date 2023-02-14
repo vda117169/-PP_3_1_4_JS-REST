@@ -9,7 +9,6 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-         userRepository.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -61,30 +60,27 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    @Override
-    public List<Role> getAllRoles() {
-        return roleRepository.findAll();
-    }
-
-    @Override
-    public Role findByRoleName(String role) {
-        return roleRepository.findByRoleName(role);
-    }
-
     private void addAndCreate(User user,
-                              String[] roles){
+                              String[] roles) {
         String roleName = null;
-        for (String s : roles) {
-            roleName = s;
-        }
-        Role role = roleRepository.findByRoleName(roleName);
         Set<Role> roleList2 = new HashSet<>() {
         };
-        roleList2.add(role);
+        for (String s : roles) {
+            roleName = s;
+            Role role = roleRepository.findByRoleName(roleName);
 
-        user.setRoles(roleList2);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+            roleList2.add(role);
+            user.setRoles(roleList2);
+        }
 
+
+
+
+        if (!user.getPassword().isEmpty()) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+        } else {
+            userRepository.save(user);
+        }
     }
 }

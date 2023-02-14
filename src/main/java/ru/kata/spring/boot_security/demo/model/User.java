@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +9,6 @@ import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,11 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 
 @ToString
 @AllArgsConstructor
@@ -59,12 +52,6 @@ public class User implements UserDetails {
     )
 
     private Set<Role> roles = new HashSet<>();
-
-    public String getRolesInfo() {
-        return roles.stream().map(Role::getRoleName).map(r -> r.substring(5)).collect(Collectors.joining(","));
-
-
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

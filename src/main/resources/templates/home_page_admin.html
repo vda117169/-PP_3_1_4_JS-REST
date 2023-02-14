@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>User</title>
@@ -26,8 +26,14 @@
         <td th:text="${user.getEmail()}">email</td>
         <td th:text="${user.getPassword()}">password</td>
         <td th:text="${user.getRoles()}">roles</td>
-        <td><a th:href="@{/edit/{id} (id=${user.id})}">Edit</a></td>
-        <td><a th:href="@{/delete/{id} (id=${user.id})}">Delete</a></td>
+        <td>
+            <form th:action="@{/edit/{id}(id=${user.id})}" target="_self">
+                <button>Обновить данные</button>
+            </form>
+            <form th:method="DELETE" th:action="@{/{id} (id=${user.id})}">
+            <button>Удалить пользователя</button>
+            </form>
+        </td>
     </tr>
 </table>
 <br/>
