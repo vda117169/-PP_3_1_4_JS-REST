@@ -38,7 +38,7 @@ public class DBInit {
         setAdmin.add(roleAdmin);
         setAdmin.add(roleUser);
         User admin = new User();
-        admin.setAge(22);
+        admin.setAge(22L);
         admin.setRoles(setAdmin);
         admin.setName("Daria");
         admin.setEmail("123@mail.ru");

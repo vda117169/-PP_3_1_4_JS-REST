@@ -11,7 +11,6 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -46,19 +45,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User user, String[] roles, Long id) throws Exception {
 
-        Optional<User> userCheck = userRepository.findById(id);
-        if (userCheck.isEmpty()) {
-            throw new Exception("Юзера с id: " + id + " нет в базе");
-        }
+        User userForUpdate = userRepository.findById(id).orElseThrow(() -> new Exception("User not found on :: " + id));
 
-        User userForUpdate = setUserValue(user, roles);
-        if (!userForUpdate.getPassword().isEmpty()) {
+        setUserValue(userForUpdate, roles);
+
+        if (!user.getPassword().isEmpty()) {
             userForUpdate.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            userRepository.save(userForUpdate);
-        }  {
-            userRepository.save(userForUpdate);
         }
+        if (user.getId() != null) {
+            userForUpdate.setId(user.getId());
+        }
+        if (user.getName() != null) {
+            userForUpdate.setName(user.getName());
+        }
+        if (user.getAge() != null ) {
+            userForUpdate.setAge(user.getAge());
+        }
+        if (user.getEmail() != null) {
+            userForUpdate.setEmail(user.getEmail());
+        }
+       if (user.getLastName() != null) {
+           userForUpdate.setLastName(user.getLastName());
+        }
+        userRepository.save(userForUpdate);
     }
+
 
     private User setUserValue(User user, String[] roles) {
         String roleName;

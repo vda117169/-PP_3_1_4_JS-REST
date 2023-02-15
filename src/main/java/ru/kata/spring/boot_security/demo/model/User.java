@@ -33,12 +33,11 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
 
     private String lastName;
 
-    private int age;
+    private Long age;
 
     private String email;
 
