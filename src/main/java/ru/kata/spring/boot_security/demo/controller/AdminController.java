@@ -64,9 +64,10 @@ public class AdminController {
     }
 
     @PatchMapping("{id}")
-    public String updateListAllUsers(@ModelAttribute("edit") User user,
-                                     @RequestParam(value = "newRole") String[] role) {
-        userService.updateUser(user, role);
+    public String updateUser(@ModelAttribute("edit") User user,
+                             @PathVariable("id") Long id,
+                                     @RequestParam(value = "newRole") String[] role) throws Exception {
+        userService.updateUser(user, role, id);
         return "redirect:/admin";
     }
 

@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -26,23 +27,51 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-
     }
-
     @Override
     public void createUser(User user, String[] roles) {
-        addAndCreate(user, roles);
+        User userForCreate = setUserValue(user, roles);
+        if (!userForCreate.getPassword().isEmpty()) {
+            userForCreate.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            userRepository.save(userForCreate);
+        } else {
+            userRepository.save(userForCreate);
+        }
     }
-
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
     @Override
-    public void updateUser(User user, String[] roles) {
-        addAndCreate(user, roles);
+    public void updateUser(User user, String[] roles, Long id) throws Exception {
 
+        Optional<User> userCheck = userRepository.findById(id);
+        if (userCheck.isEmpty()) {
+            throw new Exception("Юзера с id: " + id + " нет в базе");
+        }
+
+        User userForUpdate = setUserValue(user, roles);
+        if (!userForUpdate.getPassword().isEmpty()) {
+            userForUpdate.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            userRepository.save(userForUpdate);
+        }  {
+            userRepository.save(userForUpdate);
+        }
+    }
+
+    private User setUserValue(User user, String[] roles) {
+        String roleName;
+        Set<Role> roleList2 = new HashSet<>() {
+        };
+        for (String s : roles) {
+            roleName = s;
+            Role role = roleRepository.findByRoleName(roleName);
+
+            roleList2.add(role);
+            user.setRoles(roleList2);
+        }
+        return user;
     }
 
     @Override
@@ -60,27 +89,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    private void addAndCreate(User user,
-                              String[] roles) {
-        String roleName = null;
-        Set<Role> roleList2 = new HashSet<>() {
-        };
-        for (String s : roles) {
-            roleName = s;
-            Role role = roleRepository.findByRoleName(roleName);
-
-            roleList2.add(role);
-            user.setRoles(roleList2);
-        }
-
-
-
-
-        if (!user.getPassword().isEmpty()) {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-        } else {
-            userRepository.save(user);
-        }
-    }
 }

@@ -11,7 +11,7 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-    void updateUser(User user, String[] roles);
+    void updateUser(User user, String[] roles, Long id) throws Exception;
 
     User getUserById(Long id);
 
