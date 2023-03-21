@@ -41,13 +41,14 @@ public class AdminController {
 
     @GetMapping("/user")
     public String showInfoForUser(Model model, Principal principal) {
-        model.addAttribute("home_page", userService.getUserByName(principal.getName()));
+        User user = userService.getUserByName(principal.getName());
+        model.addAttribute("home_page", user );
         return "home_page";
     }
 
     @GetMapping("/add")
     public String getUser() { //заполнение
-        return "add";
+        return "new_user";
     }
 
     @PostMapping("/add")
