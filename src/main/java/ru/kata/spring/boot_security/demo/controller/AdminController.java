@@ -34,8 +34,9 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String showAllUsers(Model model) {
-        model.addAttribute("home_page_admin", userService.showAllUsers());
+    public String showAllUsers(Model model, Principal principal) {
+        model.addAttribute("users", userService.showAllUsers());
+        model.addAttribute("userLog", userService.getUserByName(principal.getName()));
         return "home_page_admin";
     }
 
@@ -46,9 +47,13 @@ public class AdminController {
         return "home_page";
     }
 
-    @GetMapping("/add")
-    public String getUser() { //заполнение
-        return "new_user";
+    @GetMapping("/new_user")
+    public String getUser(@ModelAttribute() Model model, Principal principal) { //заполнение
+        model.addAttribute("user", new User());
+        User user = userService.getUserByName(principal.getName());
+        model.addAttribute("us", user);
+        model.addAttribute("roles", roleService.findAll());
+        return "home_page_admin/new_user";
     }
 
     @PostMapping("/add")
