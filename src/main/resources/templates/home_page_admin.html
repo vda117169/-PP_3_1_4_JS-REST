@@ -94,7 +94,7 @@
                     </div>
                     <div class="modal-body">
                         <form th:method="PATCH"
-                              th:action="@{/admin/{id}/edit(id=${user.getId()})}"
+                              th:action="@{/{id}/edit(id=${user.getId()})}"
                               th:object="${user}">
                             <div class="row">
                                 <div class="col-3"></div>

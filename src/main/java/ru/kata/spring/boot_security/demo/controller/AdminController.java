@@ -56,20 +56,20 @@ public class AdminController {
         return "home_page_admin/new_user";
     }
 
-    @PostMapping("/add")
+    @PostMapping(value = "/new_user")
     public String userAdditions(@ModelAttribute() User user,
                                 @RequestParam(value = "newRole") String[] role) {
         userService.createUser(user, role);
         return "redirect:/admin";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}/edit")
     public String getUserById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
         return "edit";
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("/{id}/edit")
     public String updateUser(@ModelAttribute("edit") User user,
                              @PathVariable("id") Long id,
                                      @RequestParam(value = "newRole") String[] role) throws Exception {
