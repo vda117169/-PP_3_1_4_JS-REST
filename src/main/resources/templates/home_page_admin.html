@@ -40,7 +40,7 @@
             <a class="nav-link active" href="/admin">Users table</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/add}">New user</a>
+            <a class="nav-link" th:href="@{/new_user}">New user</a>
         </li>
     </ul>
     <div class="col border bg-light">
@@ -134,7 +134,8 @@
                                     <b><p class="text-center mb-0">Roles</p></b>
                                     <select name="rolesSelected" class="form-control" size="2"
                                             aria-label="size 2 select example">
-                                        <div th:each="role : ${user.getRoles}">
+
+                                        <div th:each="role : ${roles}">
                                             <option th:text="${role.getAuthority()}"
                                                     th:value="${role.getId()}" name="roles"/>
                                         </div>
@@ -231,6 +232,7 @@
     </div>
 </div>
 </div>
+
     </thead>
 </div>
 </div>

@@ -50,9 +50,10 @@ public class AdminController {
     @GetMapping("/new_user")
     public String getUser(@ModelAttribute() Model model, Principal principal) { //заполнение
         model.addAttribute("user", new User());
+        model.addAttribute("us", principal);
         User user = userService.getUserByName(principal.getName());
         model.addAttribute("roles", roleService.findAll());
-        return "home_page_admin/new_user";
+        return "/new_user";
     }
 
     @PostMapping(value = "/new_user")
