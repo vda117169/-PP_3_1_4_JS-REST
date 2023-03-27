@@ -51,7 +51,6 @@ public class AdminController {
     public String getUser(@ModelAttribute() Model model, Principal principal) { //заполнение
         model.addAttribute("user", new User());
         User user = userService.getUserByName(principal.getName());
-        model.addAttribute("us", user);
         model.addAttribute("roles", roleService.findAll());
         return "home_page_admin/new_user";
     }
@@ -66,7 +65,7 @@ public class AdminController {
     @GetMapping("/{id}/edit")
     public String getUserById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
-        return "edit";
+        return "/edit";
     }
 
     @PatchMapping("/{id}/edit")
@@ -77,7 +76,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @DeleteMapping ("/{id}")
+    @DeleteMapping ("/{id}/delete")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
