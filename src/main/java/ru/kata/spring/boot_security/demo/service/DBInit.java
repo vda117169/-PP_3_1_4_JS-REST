@@ -46,6 +46,6 @@ public class DBInit {
         admin.setLastName("Voitenko");
         users.add(admin);
 
-        userService.createUser(admin, listRoles);
+        userService.createUser(admin);
     }
 }

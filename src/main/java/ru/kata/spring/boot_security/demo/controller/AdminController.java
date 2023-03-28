@@ -37,6 +37,7 @@ public class AdminController {
     public String showAllUsers(Model model, Principal principal) {
         model.addAttribute("users", userService.showAllUsers());
         model.addAttribute("userLog", userService.getUserByName(principal.getName()));
+        model.addAttribute("roles", roleService.findAll());
         return "home_page_admin";
     }
 
@@ -48,18 +49,19 @@ public class AdminController {
     }
 
     @GetMapping("/new_user")
-    public String getUser(@ModelAttribute() Model model, Principal principal) { //заполнение
+    public String getUser(Model model, Principal principal) { //заполнение
         model.addAttribute("user", new User());
         model.addAttribute("us", principal);
+        model.addAttribute("userLog", userService.getUserByName(principal.getName()));
         User user = userService.getUserByName(principal.getName());
         model.addAttribute("roles", roleService.findAll());
         return "/new_user";
     }
 
     @PostMapping(value = "/new_user")
-    public String userAdditions(@ModelAttribute() User user,
-                                @RequestParam(value = "newRole") String[] role) {
-        userService.createUser(user, role);
+    public String userAdditions(@ModelAttribute() User user
+                               ) {
+        userService.createUser(user);
         return "redirect:/admin";
     }
 
@@ -71,9 +73,9 @@ public class AdminController {
 
     @PatchMapping("/{id}/edit")
     public String updateUser(@ModelAttribute("edit") User user,
-                             @PathVariable("id") Long id,
-                                     @RequestParam(value = "newRole") String[] role) throws Exception {
-        userService.updateUser(user, role, id);
+                             @PathVariable("id") Long id)
+                                     {
+        userService.updateUser(user, id);
         return "redirect:/admin";
     }
 

@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -28,13 +30,13 @@ public class UserServiceImpl implements UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
     @Override
-    public void createUser(User user, String[] roles) {
-        User userForCreate = setUserValue(user, roles);
-        if (!userForCreate.getPassword().isEmpty()) {
-            userForCreate.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            userRepository.save(userForCreate);
+    public void createUser(User user) {
+
+        if (!user.getPassword().isEmpty()) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
         } else {
-            userRepository.save(userForCreate);
+            userRepository.save(user);
         }
     }
     @Override
@@ -42,12 +44,11 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    @SneakyThrows
     @Override
-    public void updateUser(User user, String[] roles, Long id) throws Exception {
+    public void updateUser(User user, Long id)  {
 
-        User userForUpdate = userRepository.findById(id).orElseThrow(() -> new Exception("User not found on :: " + id));
-
-        setUserValue(userForUpdate, roles);
+       User userForUpdate = userRepository.findById(id).orElseThrow(() -> new Exception("User not found on :: " + id));
 
         if (!user.getPassword().isEmpty()) {
             userForUpdate.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));

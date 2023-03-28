@@ -7,11 +7,11 @@ import java.util.List;
 
 
 public interface UserService {
-    void createUser(User user, String[] roles);
+    void createUser(User user);
 
     void deleteUser(Long id);
 
-    void updateUser(User user, String[] roles, Long id) throws Exception;
+    void updateUser(User user, Long id);
 
     User getUserById(Long id);
 
