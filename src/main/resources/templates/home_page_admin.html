@@ -132,9 +132,11 @@
                                            th:value="${user.password}" id="password"/>
                                     <br/>
                                     <b><p class="text-center mb-0">Roles</p></b>
-                                    <select name="rolesSelected" class="form-control" size="2"
-                                            aria-label="size 2 select example">
-
+                                    <select multiple size="2"
+                                            class="form-control bg-warning"
+                                            id="roles"
+                                            name="roles"
+                                            required>
                                         <div th:each="role : ${roles}">
                                             <option th:text="${role.getAuthority()}"
                                                     th:value="${role.getId()}" name="roles"/>

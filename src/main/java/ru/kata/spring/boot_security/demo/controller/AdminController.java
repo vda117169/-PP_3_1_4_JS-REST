@@ -72,7 +72,7 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}/edit")
-    public String updateUser(@ModelAttribute("edit") User user,
+    public String updateUser(@ModelAttribute() User user,
                              @PathVariable("id") Long id)
                                      {
         userService.updateUser(user, id);
