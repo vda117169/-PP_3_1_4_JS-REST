@@ -47,43 +47,10 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     @Override
     public void updateUser(User user, Long id)  {
-
-       User userForUpdate = userRepository.findById(id).orElseThrow(() -> new Exception("User not found on :: " + id));
-
         if (!user.getPassword().isEmpty()) {
-            userForUpdate.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
-        if (user.getId() != null) {
-            userForUpdate.setId(user.getId());
-        }
-        if (user.getName() != null) {
-            userForUpdate.setName(user.getName());
-        }
-        if (user.getAge() != null ) {
-            userForUpdate.setAge(user.getAge());
-        }
-        if (user.getEmail() != null) {
-            userForUpdate.setEmail(user.getEmail());
-        }
-       if (user.getLastName() != null) {
-           userForUpdate.setLastName(user.getLastName());
-        }
-        userRepository.save(userForUpdate);
-    }
-
-
-    private User setUserValue(User user, String[] roles) {
-        String roleName;
-        Set<Role> roleList2 = new HashSet<>() {
-        };
-        for (String s : roles) {
-            roleName = s;
-            Role role = roleRepository.findByRoleName(roleName);
-
-            roleList2.add(role);
-            user.setRoles(roleList2);
-        }
-        return user;
+        userRepository.save(user);
     }
 
     @Override
