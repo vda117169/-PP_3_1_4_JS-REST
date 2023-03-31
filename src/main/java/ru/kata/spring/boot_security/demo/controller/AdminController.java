@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -53,7 +52,6 @@ public class AdminController {
         model.addAttribute("user", new User());
         model.addAttribute("us", principal);
         model.addAttribute("userLog", userService.getUserByName(principal.getName()));
-        User user = userService.getUserByName(principal.getName());
         model.addAttribute("roles", roleService.findAll());
         return "/new_user";
     }
