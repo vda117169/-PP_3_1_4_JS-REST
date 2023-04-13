@@ -1,7 +1,11 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,16 +14,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 
-@Controller
-@RequestMapping()
+@RestController
+@RequestMapping("/")
 public class AdminController {
 
     private  final UserService userService;
@@ -32,55 +40,48 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/admin")
-    public String showAllUsers(Model model, Principal principal) {
-        model.addAttribute("users", userService.showAllUsers());
-        model.addAttribute("userLog", userService.getUserByName(principal.getName()));
-        model.addAttribute("roles", roleService.findAll());
-        return "home_page_admin";
+    @GetMapping()
+    public ResponseEntity<List<User>> showAllUsers() {
+        List<User> users = userService.showAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+//    @GetMapping("/user")
+//    public String showInfoForUser(Model model, Principal principal) {
+//        User user = userService.getUserByName(principal.getName());
+//        model.addAttribute("home_page", user );
+//        return "home_page";
+//    }
 
     @GetMapping("/user")
-    public String showInfoForUser(Model model, Principal principal) {
-        User user = userService.getUserByName(principal.getName());
-        model.addAttribute("home_page", user );
-        return "home_page";
+    public ResponseEntity<User> getUserByUsername(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/new_user")
-    public String getUser(Model model, Principal principal) { //заполнение
-        model.addAttribute("user", new User());
-        model.addAttribute("us", principal);
-        model.addAttribute("userLog", userService.getUserByName(principal.getName()));
-        model.addAttribute("roles", roleService.findAll());
-        return "/new_user";
+    @SneakyThrows
+    @PostMapping()
+    public ResponseEntity<HttpStatus> userAdditions(@Valid @RequestBody User user) {
+       userService.createUser(user);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PostMapping(value = "/new_user")
-    public String userAdditions(@ModelAttribute() User user
-                               ) {
-        userService.createUser(user);
-        return "redirect:/admin";
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/{id}/edit")
-    public String getUserById(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "/edit";
-    }
-
-    @PatchMapping("/{id}/edit")
-    public String updateUser(@ModelAttribute() User user,
-                             @PathVariable("id") Long id)
-                                     {
+    @PatchMapping("/{id}")
+    public ResponseEntity<HttpStatus> updateUser(@Valid @RequestBody User user,
+                             @PathVariable("id") Long id) {
         userService.updateUser(user, id);
-        return "redirect:/admin";
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @DeleteMapping ("/{id}/delete")
-    public String deleteUser(@PathVariable("id") Long id) {
+    @DeleteMapping ("/{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return "redirect:/admin";
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }
