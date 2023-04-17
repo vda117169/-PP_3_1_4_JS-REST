@@ -1,63 +1,73 @@
 package ru.kata.spring.boot_security.demo.service;
 
-
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
-    @Override
-    public void createUser(User user) {
-
-        if (!user.getPassword().isEmpty()) {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-        } else {
-            userRepository.save(user);
-        }
-    }
-    @Override
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
     }
 
-    @SneakyThrows
+    @Bean
+    private BCryptPasswordEncoder bCrypt() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
-    public void updateUser(User user, Long id)  {
-        if (!user.getPassword().isEmpty()) {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        }
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void save(User user) {
+        user.setPassword(bCrypt().encode(user.getPassword()));
         userRepository.save(user);
     }
 
     @Override
-    public User getUserById(Long id) {
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void edit(User user) {
+        user.setPassword(bCrypt().encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public User getById(long id) {
         return userRepository.getById(id);
     }
 
     @Override
-    public User getUserByName(String name) {
-        return userRepository.findByName(name);
+    public User getByName(String name) throws ClassNotFoundException {
+        User user = userRepository.findByUsername(name);
+        if (user == null) {
+            throw new ClassNotFoundException(name);
+        }
+        return user;
     }
 
     @Override
-    public List<User> showAllUsers() {
-        return userRepository.findAll();
+    public User getByEmail(String email) throws ClassNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new ClassNotFoundException(email);
+        }
+        return user;
     }
-
 }

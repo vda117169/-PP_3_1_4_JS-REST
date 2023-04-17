@@ -1,22 +1,22 @@
 package ru.kata.spring.boot_security.demo.service;
 
-
+import org.springframework.data.crossstore.ChangeSetPersister;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
 
+public interface UserService  {
 
-public interface UserService {
-    void createUser(User user);
+    List<User> getAllUsers();
 
-    void deleteUser(Long id);
+    void save(User user);
 
-    void updateUser(User user, Long id);
+    void delete(User user);
 
-    User getUserById(Long id);
+    void edit(User user);
 
-    User getUserByName(String name);
+    User getById(long id);
 
-    List<User> showAllUsers();
-
+    User getByName(String name) throws ChangeSetPersister.NotFoundException, ClassNotFoundException;
+    User getByEmail(String email) throws ClassNotFoundException;
 }
