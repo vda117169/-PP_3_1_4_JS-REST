@@ -3,9 +3,6 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +14,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UserServiceImp implements UserService, UserDetailsService {
+public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
 
@@ -27,16 +24,6 @@ public class UserServiceImp implements UserService, UserDetailsService {
     public UserServiceImp(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-
-        User user = userRepository.findByUsername(s);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found.");
-        }
-        return user;
     }
 
     @Override
@@ -53,6 +40,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         }
         return user;
     }
+
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
