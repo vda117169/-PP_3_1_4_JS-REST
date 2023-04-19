@@ -1,49 +1,62 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Set;
 
-//@Component
-//public class DBInit {
-//
-//    private final UserService userService;
-//
-//    private final RoleService roleService;
-//
-//    public DBInit(UserService userService, RoleService roleService) {
-//        this.userService = userService;
-//        this.roleService = roleService;
-//    }
-//
-//    //@PostConstruct
-//    public void init() {
-//        List <User> users = new ArrayList<>();
-//
-//       Role roleAdmin = new Role (1L, "ROLE_ADMIN", users);
-//       Role roleUser = new Role (2L, "ROLE_USER", users);
-//       roleService.add(roleAdmin);
-//        roleService.add(roleUser);
-//
-//        Set<Role> setAdmin = new HashSet<>();
-//        String[] listRoles = new String[] {"ROLE_USER", "ROLE_ADMIN"};
-//
-//        setAdmin.add(roleAdmin);
-//        setAdmin.add(roleUser);
-//        User admin = new User();
-//        admin.setAge(22L);
-//        admin.setRoles(setAdmin);
-//        admin.setName("Daria");
-//        admin.setEmail("123@mail.ru");
-//        admin.setPassword("123");
-//        admin.setLastName("Voitenko");
-//        users.add(admin);
-//
-//        userService.createUser(admin);
-//    }
-//}
+@Component
+public class DBInit {
+
+    private final UserRepository userRepository;
+
+    private final RoleRepository roleRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public DBInit(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostConstruct
+    private void postConstruct() {
+
+        //Roles
+        Role admin = new Role();
+        admin.setId(1L);
+        admin.setRole("ROLE_ADMIN");
+
+        Role user = new Role();
+        user.setId(2L);
+        user.setRole("ROLE_USER");
+
+        roleRepository.saveAll(List.of(admin, user));
+
+        //Users
+        User adminUser = new User();
+        adminUser.setName("Daria");
+        adminUser.setLastName("Voitenko");
+        adminUser.setAge((byte) 35);
+        adminUser.setEmail("123@gmail.com");
+        adminUser.setPassword(passwordEncoder.encode("123"));
+        adminUser.addRole(admin);
+
+        User defaultUser = new User();
+        defaultUser.setName("Ivan");
+        defaultUser.setLastName("Ivanov");
+        defaultUser.setAge((byte) 40);
+        defaultUser.setEmail("321@gmail.com");
+        defaultUser.setPassword(passwordEncoder.encode("123"));
+        defaultUser.addRole(user);
+
+        userRepository.save(adminUser);
+        userRepository.save(defaultUser);
+    }
+}
